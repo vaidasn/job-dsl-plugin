@@ -3,6 +3,7 @@ package javaposse.jobdsl.plugin;
 import com.cloudbees.plugins.credentials.CredentialsProvider;
 import com.cloudbees.plugins.credentials.common.StandardCredentials;
 import com.google.common.base.Function;
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Sets;
@@ -27,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static hudson.security.ACL.SYSTEM;
+import static com.google.common.collect.Iterables.tryFind;
 
 /**
  * Manages Jenkins Jobs, providing facilities to retrieve and create / update.
@@ -265,6 +267,29 @@ public final class JenkinsJobManagement extends AbstractJobManagement {
 
     public static Set<String> getTemplates(Collection<GeneratedJob> jobs) {
         return Sets.newHashSet(Collections2.filter(Collections2.transform(jobs, new ExtractTemplate()), Predicates.notNull()));
+    }
+
+    @Override
+    public ContextExtension getTopLevelExtension(String name) {
+        return getExtension(name, JobDslTopLevelExtensionPoint.class);
+    }
+
+    @Override
+    public ContextExtension getStepExtension(String name) {
+        return getExtension(name, JobDslStepExtensionPoint.class);
+    }
+
+    @Override
+    public ContextExtension getPublisherExtension(String name) {
+        return getExtension(name, JobDslPublisherExtensionPoint.class);
+    }
+
+    private ContextExtension getExtension(final String name, Class<? extends ContextExtension> clazz) {
+        return tryFind(Jenkins.getInstance().getExtensionList(clazz), new Predicate<ContextExtension>() {
+            @Override public boolean apply(ContextExtension input) {
+                return input.getMethodName().equals(name);
+            }
+        }).orNull();
     }
 
     public static class ExtractJobName implements Function<GeneratedJob, String> {

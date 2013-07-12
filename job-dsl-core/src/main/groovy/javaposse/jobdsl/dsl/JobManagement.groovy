@@ -51,4 +51,8 @@ public interface JobManagement {
      * @return id of Credentials or <code>null</code> if no credentials could be found
      */
     String getCredentialsId(String credentialsDescription);
+
+    ContextExtension getTopLevelExtension(String name);
+    ContextExtension getStepExtension(String name);
+    ContextExtension getPublisherExtension(String name);
 }

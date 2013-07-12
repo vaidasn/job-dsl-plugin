@@ -54,6 +54,21 @@ public abstract class AbstractJobManagement implements JobManagement {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public ContextExtension getTopLevelExtension(String name) {
+        return null;
+    }
+
+    @Override
+    public ContextExtension getStepExtension(String name) {
+        return null;
+    }
+
+    @Override
+    public ContextExtension getPublisherExtension(String name) {
+        return null;
+    }
+
     protected void validateUpdateArgs(String jobName, String config) {
         validateJobNameArg(jobName);
         validateConfigArg(config);

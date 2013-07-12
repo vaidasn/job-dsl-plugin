@@ -112,7 +112,8 @@ class JobTest extends Specification {
 
     def 'create withXml blocks'() {
         setup:
-        Job job = new Job(null)
+        JobManagement jm = Mock()
+        Job job = new Job(jm)
 
         when:
         job.configure { Node node ->
@@ -130,7 +131,24 @@ class JobTest extends Specification {
         job.configure("Not a closure")
 
         then:
+        1 * jm.getTopLevelExtension("configure")
         thrown(MissingMethodException)
+    }
+
+    def 'extension point'() {
+        setup:
+        ContextExtension ce = Mock(ContextExtension)
+        JobManagement jm = Mock(JobManagement)
+        jm.getTopLevelExtension("foo") >> ce
+        Job job = new Job(jm)
+        Node root = new Node(null, "project")
+
+        when:
+        def action = job.foo("bar")
+        action.execute(root)
+
+        then:
+        1 * ce.execute(root, "bar")
     }
 
     class JobParentConcrete extends JobParent {
