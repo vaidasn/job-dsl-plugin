@@ -39,7 +39,7 @@ public class Job {
         helperScm = new ScmContextHelper(withXmlActions, type)
         helperMultiscm = new MultiScmContextHelper(withXmlActions, type)
         helperTrigger = new TriggerContextHelper(withXmlActions, type)
-        helperStep = new StepContextHelper(withXmlActions, type)
+        helperStep = new StepContextHelper(withXmlActions, type, jobManagement)
         helperPublisher = new PublisherContextHelper(withXmlActions, type)
         helperTopLevel = new TopLevelHelper(withXmlActions, type, jobManagement)
         helperMaven = new MavenHelper(withXmlActions, type)

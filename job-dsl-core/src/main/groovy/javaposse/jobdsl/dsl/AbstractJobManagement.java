@@ -1,6 +1,8 @@
 package javaposse.jobdsl.dsl;
 
 import com.google.common.collect.Maps;
+import groovy.util.Node;
+import javaposse.jobdsl.dsl.helpers.Context;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,17 +57,7 @@ public abstract class AbstractJobManagement implements JobManagement {
     }
 
     @Override
-    public ContextExtension getTopLevelExtension(String name) {
-        return null;
-    }
-
-    @Override
-    public ContextExtension getStepExtension(String name) {
-        return null;
-    }
-
-    @Override
-    public ContextExtension getPublisherExtension(String name) {
+    public Node callExtension(Class<? extends Context> contextType, String name, Object... args) {
         return null;
     }
 

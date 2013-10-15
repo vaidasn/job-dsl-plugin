@@ -1,5 +1,7 @@
 package javaposse.jobdsl.dsl;
 
+import javaposse.jobdsl.dsl.helpers.Context;
+
 /**
  * Interface to manage jobs, which the DSL needs to do.
  *
@@ -52,7 +54,5 @@ public interface JobManagement {
      */
     String getCredentialsId(String credentialsDescription);
 
-    ContextExtension getTopLevelExtension(String name);
-    ContextExtension getStepExtension(String name);
-    ContextExtension getPublisherExtension(String name);
+    Node callExtension(Class<? extends Context> contextType, String name, Object... args);
 }

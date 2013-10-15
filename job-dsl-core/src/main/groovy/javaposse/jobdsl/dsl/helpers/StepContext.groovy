@@ -2,6 +2,7 @@ package javaposse.jobdsl.dsl.helpers
 
 import com.google.common.base.Preconditions
 import groovy.transform.Canonical
+import javaposse.jobdsl.dsl.JobManagement
 import javaposse.jobdsl.dsl.JobType
 import javaposse.jobdsl.dsl.WithXmlAction
 
@@ -10,13 +11,15 @@ import static javaposse.jobdsl.dsl.helpers.StepContext.DslContext.RemovedJobActi
 class StepContext implements Context {
     List<Node> stepNodes = []
     JobType type
+    JobManagement jobManagement
 
-    StepContext(JobType jobType) {
+    StepContext(JobType jobType, JobManagement jobManagement) {
         this.type = jobType
+        this.jobManagement = jobManagement
     }
 
-    StepContext(List<Node> stepNodes, JobType jobType) {
-        this(jobType)
+    StepContext(List<Node> stepNodes, JobType jobType, JobManagement jobManagement) {
+        this(jobType, jobManagement)
         this.stepNodes = stepNodes
     }
 
@@ -987,6 +990,15 @@ class StepContext implements Context {
 
         def hasConfig() {
             return !boolParams.isEmpty() || fileParam || nodeParam || matrixFilter || subversionRevision != null || gitRevision != null || !props.isEmpty()
+        }
+    }
+
+    def methodMissing(String name, args) {
+        Node result = jobManagement.callExtension(StepContext, name, args)
+        if (result) {
+            stepNodes << result
+        } else {
+            throw new MissingMethodException(name, StepContext, args)
         }
     }
 }

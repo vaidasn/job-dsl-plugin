@@ -2,8 +2,6 @@ package javaposse.jobdsl.dsl.helpers
 
 import com.google.common.base.Preconditions
 import groovy.transform.Canonical
-import javaposse.jobdsl.dsl.ContextExtension
-import javaposse.jobdsl.dsl.Job
 import javaposse.jobdsl.dsl.JobManagement
 import javaposse.jobdsl.dsl.JobType
 import javaposse.jobdsl.dsl.WithXmlAction
@@ -538,17 +536,6 @@ class TopLevelHelper extends AbstractHelper {
             it / buildWrappers / 'com.cloudbees.jenkins.plugins.sshagent.SSHAgentBuildWrapper' {
                 user id
             }
-        }
-    }
-
-    def methodMissing(String name, args) {
-        ContextExtension extension = jobManagement.getTopLevelExtension(name)
-        if (extension) {
-            execute {
-                extension.execute(it, args)
-            }
-        } else {
-            throw new MissingMethodException(name, Job, args)
         }
     }
 }
