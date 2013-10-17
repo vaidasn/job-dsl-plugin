@@ -1,53 +1,45 @@
 package javaposse.jobdsl.plugin;
 
 import hudson.Extension;
-import javaposse.jobdsl.dsl.helpers.Context;
 import javaposse.jobdsl.dsl.helpers.StepContext;
-import jenkins.YesNoMaybe;
-import org.apache.commons.collections.Closure;
 
 import java.util.Collection;
 
+import static javaposse.jobdsl.plugin.ExecuteDslScripts.ScriptLocation;
 import static javaposse.jobdsl.plugin.RemovedJobAction.IGNORE;
+import static org.apache.commons.lang.StringUtils.join;
 
 @Extension
 public class DslStepExtension extends JobDslContextExtensionPoint {
-    @Override
-    public Class<? extends Context> getContextType() {
-        return StepContext.class;
+    @DslMethod(context = StepContext.class)
+    public Object dsl2(String scriptText) {
+        return dsl2(scriptText, IGNORE.name(), false);
     }
 
-    @Override
-    public String getMethodName() {
-        return "dsl2";
+    @DslMethod(context = StepContext.class)
+    public Object dsl2(String scriptText, String removedJobAction) {
+        return dsl2(scriptText, removedJobAction, false);
     }
 
-    @Override
-    public Object execute(Object... args) {
-        String scriptText = "";
-        String targets = null;
-        RemovedJobAction removedJobAction = IGNORE;
-        boolean ignoreExisting = false;
+    @DslMethod(context = StepContext.class)
+    public Object dsl2(String scriptText, String removedJobAction, boolean ignoreExisting) {
+        ScriptLocation scriptLocation = new ScriptLocation("true", null, scriptText);
+        return new ExecuteDslScripts(scriptLocation, ignoreExisting, RemovedJobAction.valueOf(removedJobAction));
+    }
 
-        if (args.length == 0) {
-            return null;
-        }
-        if (args[0] instanceof Closure) {
-            if (args.length > 1) {
-                return null;
-            }
-            // TODO
-            throw new UnsupportedOperationException();
-        } else if (args[0] instanceof String) {
-            scriptText = (String) args[0];
-        } else if (args[0] instanceof Collection) {
-            // TODO
-        }
-        if (args.length > 1) {
-            // TODO
-        }
+    @DslMethod(context = StepContext.class)
+    public Object dsl2(Collection<String> externalScripts) {
+        return dsl2(externalScripts, IGNORE.name(), false);
+    }
 
-        ExecuteDslScripts.ScriptLocation scriptLocation = new ExecuteDslScripts.ScriptLocation(Boolean.toString(!scriptText.isEmpty()), targets, scriptText);
-        return new ExecuteDslScripts(scriptLocation, ignoreExisting, removedJobAction);
+    @DslMethod(context = StepContext.class)
+    public Object dsl2(Collection<String> externalScripts, String removedJobAction) {
+        return dsl2(externalScripts, removedJobAction, false);
+    }
+
+    @DslMethod(context = StepContext.class)
+    public Object dsl2(Collection<String> externalScripts, String removedJobAction, boolean ignoreExisting) {
+        ScriptLocation scriptLocation = new ScriptLocation("false", join(externalScripts, "\n"), null);
+        return new ExecuteDslScripts(scriptLocation, ignoreExisting, RemovedJobAction.valueOf(removedJobAction));
     }
 }
