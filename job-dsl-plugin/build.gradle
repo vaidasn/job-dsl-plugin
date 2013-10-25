@@ -13,7 +13,7 @@ apply plugin: 'jpi'
 description = "Jenkins plugin to leverage job-dsl-core to programmatic create jobs from inside Jenkins."
 
 jenkinsPlugin {
-    coreVersion = '1.480'
+    coreVersion = '1.509'
     displayName = 'Job DSL'
     url = 'https://wiki.jenkins-ci.org/display/JENKINS/Job+DSL+Plugin'
     gitHubUrl = 'https://github.com/jenkinsci/job-dsl-plugin'
@@ -44,7 +44,9 @@ jenkinsPlugin {
 
 dependencies {
     compile project(':job-dsl-core')
+    testCompile 'org.jenkins-ci.modules:instance-identity:1.3'
     optionalJenkinsPlugins([group: 'org.jenkins-ci.plugins', name: 'credentials', version: '1.6', ext: 'jar'])
+    optionalJenkinsPlugins([group: 'org.jenkins-ci.plugins', name: 'mailer', version: '1.5', ext: 'jar'])
 }
 
 tasks.jpi.manifest.attributes(["PluginFirstClassLoader": "true" ])
