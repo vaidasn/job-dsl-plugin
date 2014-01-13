@@ -6,7 +6,7 @@ import javaposse.jobdsl.dsl.WithXmlAction
 import static com.google.common.base.Preconditions.checkNotNull
 import static com.google.common.base.Preconditions.checkState
 
-class MavenHelper extends AbstractHelper {
+class MavenHelper extends AbstractJobHelper {
 
     StringBuilder allGoals = new StringBuilder()
     StringBuilder allMavenOpts = new StringBuilder()
